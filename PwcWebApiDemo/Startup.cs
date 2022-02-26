@@ -6,10 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using PwcWebApiDemo.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace PwcWebApiDemo
 {
@@ -30,6 +32,10 @@ namespace PwcWebApiDemo
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PwcWebApiDemo", Version = "v1" });
+            });
+            services.AddDbContext<DataContext>(opt=>
+            {
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
         }
 

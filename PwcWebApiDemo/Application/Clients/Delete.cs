@@ -8,35 +8,30 @@ using System.Threading.Tasks;
 
 namespace PwcWebApiDemo.Application.Clients
 {
-    public class Edit
+    public class Delete
     {
         public class Command : IRequest
         {
-            public Client Client { get; set; }
+            public Guid Id { get; set; }
 
         }
 
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
-            private readonly IMapper _mapper;
 
-            public Handler(
-                DataContext context,
-                IMapper mapper
-                )
+            public Handler(                DataContext context                )
             {
                 _context = context;
-                _mapper = mapper;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var client = await _context.Clients.FindAsync(request.Client.Id);
+                var client = await _context.Clients.FindAsync(request.Id);
 
                 if (client == null) throw new Exception("id not found");
 
-                _mapper.Map(request.Client, client);
+                _context.Remove(client);
 
                 await _context.SaveChangesAsync();
 

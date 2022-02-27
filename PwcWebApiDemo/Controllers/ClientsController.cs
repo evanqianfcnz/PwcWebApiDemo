@@ -8,9 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PwcWebApiDemo.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
+{ 
     public class ClientsController : BaseApiController
     {
         public ClientsController()
@@ -28,6 +26,21 @@ namespace PwcWebApiDemo.Controllers
         {
             return await Mediator.Send(new Details.Query { Id = id });
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateClient(Client client)
+        {
+            await Mediator.Send(new Create.Command { Client = client });
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditClient(Guid id, Client client)
+        {
+            client.Id = id;
+            await Mediator.Send(new Edit.Command { Client = client });
+            return Ok();
         }
     }
 }

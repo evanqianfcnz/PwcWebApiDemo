@@ -18,23 +18,44 @@ namespace PwcWebApiDemo.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Client>>> GetClients()
         {
+            try
+            {
+                return await Mediator.Send(new List.Query());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
 
-            return await Mediator.Send(new List.Query());
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Client>> GetClient(Guid id)
         {
-            var client = await Mediator.Send(new Details.Query { Id = id });
-            if(client == null) return NotFound();
-            return client;
-
+            try
+            {
+                var client = await Mediator.Send(new Details.Query { Id = id });
+                if (client == null) return NotFound();
+                return client;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateClient(Client client)
         {
-            await Mediator.Send(new Create.Command { Client = client });
-            return Ok();
+            try
+            {
+                await Mediator.Send(new Create.Command { Client = client });
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+
         }
 
         [HttpPut("{id}")]
@@ -48,7 +69,7 @@ namespace PwcWebApiDemo.Controllers
             }
             catch(Exception ex)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -62,7 +83,7 @@ namespace PwcWebApiDemo.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
     }

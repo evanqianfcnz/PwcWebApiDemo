@@ -20,7 +20,7 @@ namespace PwcWebApiDemo.Application.Clients
         {
             private readonly DataContext _context;
 
-            public Handler(                DataContext context                )
+            public Handler(DataContext context)
             {
                 _context = context;
             }
@@ -29,11 +29,13 @@ namespace PwcWebApiDemo.Application.Clients
             {
                 var client = await _context.Clients.FindAsync(request.Id);
 
-                if (client == null) throw new Exception("id not found");
+                if (client != null)
+                {
+                    _context.Remove(client);
 
-                _context.Remove(client);
+                    await _context.SaveChangesAsync();
 
-                await _context.SaveChangesAsync();
+                }
 
                 return Unit.Value;
             }

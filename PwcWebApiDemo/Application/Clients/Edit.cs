@@ -34,11 +34,12 @@ namespace PwcWebApiDemo.Application.Clients
             {
                 var client = await _context.Clients.FindAsync(request.Client.Id);
 
-                if (client == null) throw new Exception("id not found");
+                if (client != null)
+                {
+                    _mapper.Map(request.Client, client);
 
-                _mapper.Map(request.Client, client);
-
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                }
 
                 return Unit.Value;
             }

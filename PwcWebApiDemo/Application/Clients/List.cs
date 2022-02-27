@@ -18,6 +18,7 @@ namespace PwcWebApiDemo.Application.Clients
         public class Handler : IRequestHandler<Query, List<Client>>
         {
             private readonly DataContext _context;
+
             public Handler(DataContext context)
             {
                 _context= context;
